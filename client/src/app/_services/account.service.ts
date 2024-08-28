@@ -37,7 +37,7 @@ baseUrl='https://localhost:5001/api/';
             localStorage.setItem("user",JSON.stringify(user));
             this.currentUser.set(user);
         }
-          
+         return user; 
       })
     )
   }
