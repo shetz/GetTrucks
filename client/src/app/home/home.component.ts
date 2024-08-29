@@ -1,5 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RegisterComponent } from "../register/register.component";
 import { Register1Component } from "../register1/register1.component";
 import { HttpClient } from '@angular/common/http';
 //import { RegisterComponent } from "../register/register.component";
@@ -9,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
     standalone: true,
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
-    imports: [RegisterComponent, Register1Component]
+    imports: [ Register1Component]
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {

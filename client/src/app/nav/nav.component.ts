@@ -1,31 +1,40 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
-import { NgIf } from '@angular/common';
+import { NgIf, TitleCasePipe } from '@angular/common';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [FormsModule, BsDropdownModule],
+  imports: [FormsModule, BsDropdownModule,RouterLink,RouterLinkActive,TitleCasePipe],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+[x: string]: string|undefined;
    accountService = inject(AccountService);
-  model:any={};
-  //loggedIn:boolean=false;
+    private router = inject(Router)
+    private toastr = inject(ToastrService)
+    model:any={};
+  
     login(){
       
       console.log(this.model);
       this.accountService.login(this.model).subscribe({
           next: (response: any) =>{//next:response=>{
-          ///  this.loggedIn=true;
+          
           
             console.log(response);
+            this.router.navigateByUrl('/members');
           },
-          error:error=> console.log(error),
+          error:prog_error=> {
+            this.toastr.error(prog_error.error);
+            console.log(prog_error.error);
+          },
           complete:()=>console.log("req has completed")
         })
     }
@@ -33,6 +42,6 @@ export class NavComponent {
     logout()
     {
       this.accountService.logout(); 
-      //this.loggedIn=false;
+      this.router.navigateByUrl('/');
     }
 }

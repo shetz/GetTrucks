@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Inject, input, output } from '@angular/core';
+import { Component, EventEmitter, inject, Inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register1',
@@ -16,40 +17,19 @@ export class Register1Component {
   usersFromHomeComponent = input.required<any>()
   model:any={};
   private accountService = Inject(AccountService);
-
+  private toastr = Inject(ToastrService)
 
 
   
   register() {
-    /*
-     console.log(this.model);
-      this.accountService.login(this.model).subscribe({
-          next: (response: any) =>{
-          ///  this.loggedIn=true;
-          
-            console.log(response);
-          },
-          error:(error: any)=> console.log(error),
-          complete:()=>console.log("req has completed")
-        })
-
-this.accountService.login(this.model).subscribe({
-          next: (response: any) =>{
-          ///  this.loggedIn=true;
-          
-            console.log(response);
-          },
-          error:(error: any)=> console.log(error),
-          complete:()=>console.log("register has completed")
-        })
-          */
+    
      this.accountService.register(this.model).subscribe({
        next:(respone: any)=>{
          console.log(respone);
 
          this.cancel();
        },
-       error: (error: any)=> console.log(error)
+       error: (prog_error: any)=> this.toastr.error(prog_error.error)
      })
 
   }
