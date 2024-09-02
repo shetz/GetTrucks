@@ -19,7 +19,6 @@ export class Register1Component {
   private accountService = Inject(AccountService);
   private toastr = Inject(ToastrService)
 
-
   
   register() {
     

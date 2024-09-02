@@ -26,7 +26,19 @@ baseUrl='https://localhost:5001/api/';
     )
   }
 
-  
+  register_1(model:any) {
+    this.http.post(this.baseUrl + 'account/register',model).subscribe({
+      next: response => {console.log(response)
+
+      },
+      error: error => {
+        console.log(error);
+        
+      }
+    })
+  }
+
+
   register(model:any)
   {
     console.log("reg start");

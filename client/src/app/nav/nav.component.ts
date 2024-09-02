@@ -15,10 +15,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
-[x: string]: string|undefined;
+//[x: string]: string|undefined;
    accountService = inject(AccountService);
-    private router = inject(Router)
-    private toastr = inject(ToastrService)
+    private router = inject(Router);
+    private toastr = inject(ToastrService);
     model:any={};
   
     login(){
