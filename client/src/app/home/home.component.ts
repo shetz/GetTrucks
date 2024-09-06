@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {
-    this.getUsers();
+    //this.getUsers();
   }
   users:any;
   registerMode = false;

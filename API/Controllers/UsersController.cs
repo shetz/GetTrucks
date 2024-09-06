@@ -22,9 +22,9 @@ public class UsersController (IUserRepository userRepo) : BaseApiController//Dat
 
    
     [HttpGet("{username}")]
-    public ActionResult<MemberDto> GetUser(string username)
+    public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
-        var user = userRepo.GetMemberAsync(username, false);//userRepo.GetUserByUsernameAsync(username); //context.Users.Find(id);
+        var user = await userRepo.GetMemberAsync(username, false);//userRepo.GetUserByUsernameAsync(username); //context.Users.Find(id);
         if (user ==null)
             return NotFound();
 
