@@ -25,6 +25,7 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
        var allusers= await context.Users
                 .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                 .ToListAsync();
+        
         //  var user=  await context.Users
         //     .Where(x => x.UserName == username)
         //      .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
@@ -67,5 +68,15 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
     public void Update(AppUser user)
     {
         context.Entry(user).State = EntityState.Modified;
+    }
+
+    public async Task<bool> SaveAllAsync()
+    {
+       int n = await context.SaveChangesAsync();
+       if(  n>0) 
+        return true;
+        
+       return false;
+
     }
 }

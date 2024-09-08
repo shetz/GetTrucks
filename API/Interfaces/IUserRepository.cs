@@ -17,4 +17,5 @@ public interface IUserRepository
     Task<IEnumerable<MemberDto>> GetMembersAsync();
 
     Task<MemberDto?> GetMemberAsync(string username, bool isCurrentUser);
+    Task<bool> SaveAllAsync();
 }
