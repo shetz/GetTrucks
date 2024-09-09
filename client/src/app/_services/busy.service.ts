@@ -11,11 +11,13 @@ export class BusyService {
 
   busy(){
     this.busyRequestCount++;
-    this.spinnerService.show(undefined,{
-      type:'pacman',
-      bdColor:'rgba(255,255,255,0)',
-      color:'#333333'
-    })
+     this.spinnerService.show(undefined,{
+       type:'ball-zig-zag-deflect',//'line-scale-pulse-out-rapid',
+       bdColor:'rgba(255,255,255,0)',
+       color:'#333333'
+     })
+
+   // confirm("this is to make it slow");
   }
 
   idle()
