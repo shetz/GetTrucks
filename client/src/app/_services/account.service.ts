@@ -19,25 +19,13 @@ baseUrl= environment.apiUrl;//'https://localhost:5001/api/';
     return this.http.post<User>(this.baseUrl+'account/login', model).pipe(
       map(user=>{
         if(user){
-            localStorage.setItem("user",JSON.stringify(user));
-            this.currentUser.set(user);
+           this.setCurrentUser(user);
         }
           
       })
     )
   }
 
-  register_1(model:any) {
-    this.http.post(this.baseUrl + 'account/register',model).subscribe({
-      next: response => {console.log(response)
-
-      },
-      error: error => {
-        console.log(error);
-        
-      }
-    })
-  }
 
 
   register(model:any)
@@ -47,8 +35,7 @@ baseUrl= environment.apiUrl;//'https://localhost:5001/api/';
     return this.http.post<User>(this.baseUrl+'account/register', model).pipe(
       map(user=>{
         if(user){
-            localStorage.setItem("user",JSON.stringify(user));
-            this.currentUser.set(user);
+             this.setCurrentUser(user);
         }
          return user; 
       })
@@ -56,6 +43,12 @@ baseUrl= environment.apiUrl;//'https://localhost:5001/api/';
   }
 
   
+  setCurrentUser(user:User)
+  {
+    localStorage.setItem("user",JSON.stringify(user));
+            this.currentUser.set(user);
+  }
+
   logout()
   {
     localStorage.removeItem('user');

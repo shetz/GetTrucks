@@ -69,8 +69,8 @@
 
             </tab>
             <tab heading="Edit photos">
-                <tab heading="Edit photos">llll
-                <app-photo-editor [member]="member" ></app-photo-editor>
+                <tab heading="Edit photos">
+                <app-photo-editor [member]="member" (memberChange)="onMemberChange($event)" ></app-photo-editor>
                 </tab>
                 
             </tab>

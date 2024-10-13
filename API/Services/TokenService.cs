@@ -14,8 +14,10 @@ public class TokenService(IConfiguration config) : ItokenService
         var tokenKey = config["tokenKey"] ?? throw new Exception("Cannot access token key");
         if(tokenKey.Length <64 )throw new Exception ("token key too short");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
-        var claims = new List<Claim>{
-            new (ClaimTypes.NameIdentifier,user.UserName)
+        var claims = new List<Claim>
+        {
+            new (ClaimTypes.NameIdentifier,user.Id.ToString()),
+            new (ClaimTypes.Name,user.UserName)
         };
         var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
         

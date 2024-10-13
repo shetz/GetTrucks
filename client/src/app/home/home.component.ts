@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Register1Component } from "../register1/register1.component";
+
 import { HttpClient } from '@angular/common/http';
-//import { RegisterComponent } from "../register/register.component";
+import { RegisterComponent } from "../register/register.component";
 
 @Component({
     selector: 'app-home',
     standalone: true,
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
-    imports: [ Register1Component]
+    imports: [ RegisterComponent]
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {

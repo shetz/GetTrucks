@@ -1,17 +1,30 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
     <div class="container">
-        <a class="navbar-brand" routerLink="/">Free for work</a>
+        <!-- <a class="navbar-brand" routerLink="/">מי פנוי?</a> -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-            <!--   -->
+            @if(accountService.currentUser())
+            {
+            <div class="dropdown" dropdown>
+                <img class="me-2" src="{{accountService.currentUser()?.photoUrl || './assets/user.png'}}" alt="user main image">
+                <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">
+                    שלום {{accountService.currentUser()?.knownAs| titlecase}}</a>
+                <div class="dropdown-menu" *dropdownMenu>
+                    <a class="dropdown-item" (click)="logout()">יציאה</a>
+                    <div class="dropdown-devider"></div>
+                    <a class="dropdown-item" routerLink="/member/edit">עריכת פרופיל</a>
+                </div>
+           
+            </div>
+            }
             @if(accountService.currentUser())
             {
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a routerLink="/members" routerLinkActive="active" class="nav-link" >Matches</a>
+                        <a routerLink="/members" routerLinkActive="active" class="nav-link" >ספקים פנויים</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/lists" routerLinkActive="active">lists</a>
@@ -26,30 +39,18 @@
 
                
             }
-            @if(accountService.currentUser())
-            {
-            <div class="dropdown" dropdown>
-                <a dropdownToggle class="dropdown-toggle text-light text-decoration-none" >
-                    Welcome {{accountService.currentUser()?.username | titlecase}}</a>
-                <div class="dropdown-menu" *dropdownMenu>
-                    <a class="dropdown-item" (click)="logout()">Logout</a>
-                    <div class="dropdown-devider"></div>
-                    <a class="dropdown-item" routerLink="/member/edit" >Edit profile</a>
-                </div>
-            
-            </div>
-        }
+           
             @if(!accountService.currentUser())
             {
             <form #loginForm="ngForm" (ngSubmit)="login()" class="d-flex">
                 <input name="username"
                  [(ngModel)]="model.username" 
-                 class="form-control me-2"  placeholder="Username" >
+                 class="form-control me-2"  placeholder="שם משתמש" >
                 <input name="password"
                  [(ngModel)]="model.password" 
-                 class="form-control me-2" type="password" placeholder="Password">
+                 class="form-control me-2" type="password" placeholder="סיסמא">
 
-                <button class="btn btn-outline-success" type="submit">Login</button>
+                <button class="btn btn-outline-success" type="submit">שלח</button>
             </form>
         }
         </div>

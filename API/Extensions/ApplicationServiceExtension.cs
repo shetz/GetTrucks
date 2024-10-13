@@ -21,10 +21,13 @@ namespace API.Extensions
             services.AddCors();
             services.AddScoped<ItokenService, TokenService>();
             services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<LogUserActivity>();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             
-            services.AddScoped<IPhotoService, PhotoService>();
+            
             return services;
 
 
