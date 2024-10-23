@@ -19,7 +19,7 @@ export class MemberListComponent implements OnInit{
 public memberService = inject(MembersService);
 //private accountSerevice = inject(AccountService);
 //userParams = new UserParams(this.accountSerevice.currentUser());
-genderList=[{value:'male', display:'Males'},{value:'female', display:'Females'}]
+genderList=[{value:'male', display:'גברים'},{value:'female', display:'נשים'}]
 
 members :Member[]=[];
 
