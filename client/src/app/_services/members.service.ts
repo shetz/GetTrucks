@@ -6,7 +6,6 @@ import { AccountService } from './account.service';
 import { of } from 'rxjs';
 import { Photo } from '../_models/photo';
 import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
-//import { PaginatedResult } from '../_models/Pagination';
 import { UserParams } from '../_models/UserParams';
 import { PaginatedResult } from '../_models/pagination';
 
