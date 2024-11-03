@@ -14,7 +14,7 @@ namespace API.Controllers;
 public class UsersController (IPhotoService photoService,
  IUserRepository userRepo,IMapper mapper) : BaseApiController
 {
-
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberDto>>>  GetUsers([FromQuery] UserParams userParams)
     {
@@ -29,7 +29,7 @@ public class UsersController (IPhotoService photoService,
         return Ok(users);
     }
 
-   
+
     [HttpGet("{username}")]
     public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
@@ -82,7 +82,7 @@ public class UsersController (IPhotoService photoService,
             PublicId = result.PublicId
         };
 
-        user.Photos.Add(photo);
+        user!.Photos.Add(photo);
         
         if(await userRepo.SaveAllAsync()) //return mapper.Map<PhotoDto>(photo);
             return CreatedAtAction(nameof(GetUser),

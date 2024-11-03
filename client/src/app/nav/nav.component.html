@@ -32,9 +32,15 @@
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/messages" routerLinkActive="active">הודעות</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" routerLink="/errors" routerLinkActive="active">test errors</a>
+                    <!-- <li class="nav-item" *appHasRole="['Admin','Moderator']">
+                        <a class="nav-link" routerLink="/admin" routerLinkActive="active">אדמין</a>
                     </li> -->
+                    <li class="nav-item" >
+                        <a class="nav-link" routerLink="/admin" routerLinkActive="active">אדמין</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/errors" routerLinkActive="active">test errors</a>
+                    </li>
                 </ul>
 
                

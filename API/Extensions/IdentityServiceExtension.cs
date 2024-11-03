@@ -1,35 +1,103 @@
 using System.Text;
 using API.Data;
+using API.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace API.Extensions
+namespace API.Extensions;
+
+public static class IdentityServiceExtensions
 {
-    public static class IdentityServiceExtension
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services,
+        IConfiguration config)
     {
-        public static IServiceCollection AddIdentityServices
-        (this IServiceCollection services, IConfiguration config)
+        services.AddIdentityCore<AppUser>(opt =>
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            opt.Password.RequireNonAlphanumeric = false;
+        })
+            .AddRoles<AppRole>()
+            .AddRoleManager<RoleManager<AppRole>>()
+            .AddEntityFrameworkStores<DataContext>();
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
+            {
+                var tokenKey = config["TokenKey"] ?? throw new Exception("TokenKey not found");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
                     {
-                        var tokenKey = config["tokenKey"] ?? throw new Exception("Cannot access token key");
-                        options.TokenValidationParameters = new TokenValidationParameters
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
                         {
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
-                            ValidateIssuer = false,
-                            ValidateAudience = false
+                            context.Token = accessToken;
+                        }
 
-                        };
-
+                        return Task.CompletedTask;
                     }
-                );
+                };
+            });
 
-            return services;
+        services.AddAuthorizationBuilder()
+            .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
+            .AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
 
-
-        }
+        return services;
     }
 }
+
+
+
+
+
+
+
+
+
+
+// using System.Text;
+// using API.Data;
+// using Microsoft.AspNetCore.Authentication.JwtBearer;
+// using Microsoft.EntityFrameworkCore;
+// using Microsoft.IdentityModel.Tokens;
+
+// namespace API.Extensions
+// {
+//     public static class IdentityServiceExtension
+//     {
+//         public static IServiceCollection AddIdentityServices
+//         (this IServiceCollection services, IConfiguration config)
+//         {
+//             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//             .AddJwtBearer(options =>
+//                     {
+//                         var tokenKey = config["tokenKey"] ?? throw new Exception("Cannot access token key");
+//                         options.TokenValidationParameters = new TokenValidationParameters
+//                         {
+//                             ValidateIssuerSigningKey = true,
+//                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+//                             ValidateIssuer = false,
+//                             ValidateAudience = false
+
+//                         };
+
+//                     }
+//                 );
+
+//             return services;
+
+
+//         }
+//     }
+// }
