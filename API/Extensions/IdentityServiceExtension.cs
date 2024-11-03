@@ -31,7 +31,7 @@ public static class IdentityServiceExtensions
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-
+               
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>

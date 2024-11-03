@@ -17,7 +17,7 @@ export class MemberCardComponent {
   member = input.required<Member>();
   hasLiked = computed(() => this.likeService.likeIds().includes(this.member().id));
  // isOnline = computed(() => this.presenceService.onlineUsers().includes(this.member().username));
-
+isOnline(){return true;}
   toggleLike() {
     this.likeService.toggleLike(this.member().id).subscribe({
       next: () => {
