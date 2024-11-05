@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, ViewChild, viewChild } from '@angular/core';
+
+import { Component, inject, OnDestroy, OnInit, ViewChild, viewChild } from '@angular/core';
 import { MembersService } from '../../_services/members.service';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from '../../_models/member';
@@ -9,6 +10,8 @@ import { DatePipe } from '@angular/common';
 import { MemberMessagesComponent } from "../member-messages/member-messages.component";
 import { Message } from '../../_models/message';
 import { MessageService } from '../../_services/message.service';
+import { PresenceService } from '../../_services/presence.service';
+import { AccountService } from '../../_services/account.service';
 
 
 @Component({
@@ -18,10 +21,13 @@ import { MessageService } from '../../_services/message.service';
   templateUrl: './member-detail.component.html',
   styleUrl: './member-detail.component.css'
 })
-export class MemberDetailComponent implements OnInit {
+export class MemberDetailComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+   this.messageService.stopHubConnection();
+  }
 
 ngOnInit(): void {
-  //this.loadMember();
+  
   //the member is loaded by the resolver 
   this.route.data.subscribe({
       next: data => {
@@ -42,22 +48,26 @@ ngOnInit(): void {
  @ViewChild('memberTabs',{static:true}) memberTabs?: TabsetComponent;
 
   activeTab?: TabDirective;
-  messages:Message[]=[];
+  //messages:Message[]=[];
   private messageService = inject(MessageService);
   private memberService = inject(MembersService);
+  private accountService = inject(AccountService);
+  presenceService = inject(PresenceService);
+
   private route = inject(ActivatedRoute);
+  
   member:Member ={} as Member;
   images:GalleryItem[]=[];
 
-onUpdateMessages(event:Message)
-{
-  this.messages.push(event);
-}
+// onUpdateMessages(event:Message)
+// {
+//   this.messages.push(event);
+// }
 
  selectTab(heading: string) {
-  console.log('is m func')
+  
     if (this.memberTabs) {
-      console.log('is m tabs')
+      
       const messageTab = this.memberTabs.tabs.find(x => x.heading === heading);
       if (messageTab) messageTab.active = true;
     }
@@ -88,16 +98,16 @@ onTabActivated(data: TabDirective) {
     //   queryParams: {tab: this.activeTab.heading},
     //   queryParamsHandling: 'merge'
     // })
-     if (this.activeTab.heading === 'Messages' && this.member  && this.messages.length==0) {
-    //   const user = this.accountService.currentUser();
-    //   if (!user) return;
-    //   this.messageService.createHubConnection(user, this.member.username);
-    // } else {
-    //   this.messageService.stopHubConnection();
+     if (this.activeTab.heading === 'Messages' && this.member ) {
+      const user = this.accountService.currentUser();
+      if (!user) return;
+      this.messageService.createHubConnection(user, this.member.username);
+    } else {
+      this.messageService.stopHubConnection();
 
-    this.messageService.getMessageThread(this.member.username).subscribe({
-      next:messages => this.messages=messages
-    })
+  //   this.messageService.getMessageThread(this.member.username).subscribe({
+  //     next:messages => this.messages=messages
+  //  })
 
 
      }
