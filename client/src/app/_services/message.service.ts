@@ -8,6 +8,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@micros
 import { User } from '../_models/user';
 //import { Group } from '../_models/group';
 import { BusyService } from './busy.service';
+import { Group } from '../_models/group';
 
 @Injectable({
   providedIn: 'root'
@@ -44,18 +45,18 @@ export class MessageService {
       this.messageThread.update(messages => [...messages, message])
     });
 
-    // this.hubConnection.on('UpdatedGroup', (group: Group) => {
-    //   if (group.connections.some(x => x.username === otherUsername)) {
-    //     this.messageThread.update(messages => {
-    //       messages.forEach(message => {
-    //         if (!message.dateRead) {
-    //           message.dateRead = new Date(Date.now());
-    //         }
-    //       })
-    //       return messages;
-    //     })
-    //   }
-    // })
+    this.hubConnection.on('UpdatedGroup', (group: Group) => {
+      if (group.connections.some(x => x.username === otherUsername)) {
+        this.messageThread.update(messages => {
+          messages.forEach(message => {
+            if (!message.dateRead) {
+              message.dateRead = new Date(Date.now());
+            }
+          })
+          return messages;
+        })
+      }
+    })
   }
 
   stopHubConnection() {
