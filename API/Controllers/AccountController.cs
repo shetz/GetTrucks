@@ -116,9 +116,9 @@ public class AccountController(UserManager<AppUser> userManager,
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto dto)
     {
-        var user = await userManager.Users //context.Users
+        var user = await userManager.Users 
         .Include(p=>p.Photos)
-       //.FirstAsync(u=>u.UserName== dto.Username);
+      
        .FirstAsync(u => u.NormalizedUserName == dto.Username.ToUpper());
         
         if (user==null)
@@ -129,13 +129,7 @@ public class AccountController(UserManager<AppUser> userManager,
         if(!result) return Unauthorized();
 
         
-        // using var hmac = new HMACSHA512(user.PasswordSalt);
-        // var coputedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
-        // for (int i = 0; i < coputedHash.Length; i++)
-        // {
-        //     if(coputedHash[i]!= user.PasswordHashed[i])
-        //     return Unauthorized("wrong password");
-        // }
+        
         return new UserDto{
             Username=user.UserName!,
             KnownAs=user.KnownAs,

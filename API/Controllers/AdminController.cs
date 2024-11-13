@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace API;
 
 public class AdminController(UserManager<AppUser> userManager,// IUnitOfWork unitOfWork,
-    IPhotoService photoService) : BaseApiController
+    IPhotoService photoService, IPhotoRepository photoRepository,
+     IUserRepository userRepository) : BaseApiController
 {
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("users-with-roles")]
@@ -56,7 +57,7 @@ public class AdminController(UserManager<AppUser> userManager,// IUnitOfWork uni
     [HttpGet("photos-to-moderate")]
     public async Task<ActionResult> GetPhotosForModeration()
     {
-        var photos ="{}";// await uhotoRepository.GetUnapprovedPhotos();
+        var photos = await photoRepository.GetUnapprovedPhotos();
 
         return Ok(photos);
     }
@@ -65,20 +66,20 @@ public class AdminController(UserManager<AppUser> userManager,// IUnitOfWork uni
     [HttpPost("approve-photo/{photoId}")]
     public async Task<ActionResult> ApprovePhoto(int photoId)
     {
-        // var photo = await unitOfWork.PhotoRepository.GetPhotoById(photoId);
+        var photo = await photoRepository.GetPhotoById(photoId);
 
-        // if (photo == null) return BadRequest("Could not get photo from db");
+        if (photo == null) return BadRequest("Could not get photo from db");
 
-        // photo.IsApproved = true;
+        photo.IsApproved = true;
 
-        // var user = await unitOfWork.UserRepository.GetUserByPhotoId(photoId);
+        var user = await userRepository.GetUserByPhotoId(photoId);
 
-        // if (user == null) return BadRequest("Could not get user from db");
+        if (user == null) return BadRequest("Could not get user from db");
 
-        // if (!user.Photos.Any(x => x.IsMain)) photo.IsMain = true;
+        if (!user.Photos.Any(x => x.IsMain)) photo.IsMain = true;
 
         // await unitOfWork.Complete();
-
+        await photoRepository.SaveChanges();
         return Ok();
     }
 
@@ -86,26 +87,26 @@ public class AdminController(UserManager<AppUser> userManager,// IUnitOfWork uni
     [HttpPost("reject-photo/{photoId}")]
     public async Task<ActionResult> RejectPhoto(int photoId)
     {
-        // var photo = await unitOfWork.PhotoRepository.GetPhotoById(photoId);
+        var photo = await photoRepository.GetPhotoById(photoId);
 
-        // if (photo == null) return BadRequest("Could not get photo from db");
+        if (photo == null) return BadRequest("Could not get photo from db");
 
-        // if (photo.PublicId != null)
-        // {
-        //     var result = await photoService.DeletePhotoAsync(photo.PublicId);
+        if (photo.PublicId != null)
+        {
+            var result = await photoService.DeletePhotoAsync(photo.PublicId);
 
-        //     if (result.Result == "ok")
-        //     {
-        //         unitOfWork.PhotoRepository.RemovePhoto(photo);
-        //     }
-        // }
-        // else
-        // {
-        //     unitOfWork.PhotoRepository.RemovePhoto(photo);
-        // }
+            if (result.Result == "ok")
+            {
+                photoRepository.RemovePhoto(photo);
+            }
+        }
+        else
+        {
+            photoRepository.RemovePhoto(photo);
+        }
 
         // await unitOfWork.Complete();
-
+       await photoRepository.SaveChanges();
         return Ok();
     }
 }

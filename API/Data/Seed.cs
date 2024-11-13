@@ -94,23 +94,20 @@
             await roleManager.CreateAsync(role);
         }
 
-        //using var hmac = new HMACSHA512();
+        
        foreach (var user in users)
          {
-             user.Photos.First().IsApproved = true;
-             user.UserName = user.UserName!.ToLower();
-           // user.PasswordHashed= hmac.ComputeHash(Encoding.UTF8.GetBytes("1234"));
-             //user.PasswordSalt = hmac.Key;
+            user.Photos.First().IsApproved = true;
+            user.UserName = user.UserName!.ToLower();
+            user.UserName=user.UserName.ToLower();
+            user.Photos.First().IsApproved = true;
 
-           //data.Users.Add(user);
-           user.UserName=user.UserName.ToLower();
-
-           await userManager.CreateAsync(user,"Pa$$w0rd");
+            await userManager.CreateAsync(user,"Pa$$w0rd");
            await userManager.AddToRoleAsync(user, "Member");
         }
 
 
-         //await data.SaveChangesAsync();
+         
         var admin = new AppUser
         {
             UserName = "admin",

@@ -12,7 +12,7 @@ import { RegisterComponent } from "../register/register.component";
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {
-    //this.getUsers();
+   
   }
   users:any;
   registerMode = false;
